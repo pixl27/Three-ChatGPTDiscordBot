@@ -20,6 +20,7 @@ async def handle_response(message) -> str:
     chatbot.refresh_session()
     response = await chatbot.get_chat_response(prompt, output="text")
     responseMessage = response["message"]
+    print(response["conversation_id"] )
 
     return responseMessage
 

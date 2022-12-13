@@ -50,13 +50,13 @@ async def send_message(message, user_message):
         else:
             await message.followup.send(response)
     except Exception as e:
-        await message.followup.send("> **Error: Something went wrong, please try again later!**")
+        await message.followup.send("> **Hummmm , encore un erreur , bah au moins je vous aime**")
         print(e)
 
 
 async def send_message_mp(message, user_message, is_private):
     try:
-        response = responses.handle_response(user_message)
+        response = await responses.handle_response(user_message)
         await message.author.send(
             response) if is_private else await message.channel.send(response)
 
@@ -69,7 +69,7 @@ intents.message_content = True
 
 
 def run_discord_bot():
-    TOKEN = "MTA1MDAxNTI1MDY1NDY5OTU1MA.GvtbPV.agEII7S9yRw-qGsDyFVK5i7lgC5RE61WTvoHVQ"
+    TOKEN = ""
     client = commands.Bot(command_prefix='!', intents=intents)
 
     @client.event
