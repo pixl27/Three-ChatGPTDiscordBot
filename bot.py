@@ -3,6 +3,8 @@ from discord import app_commands
 from discord.ext import commands
 from keep_alive import keep_alive
 import responses
+import patchgpt
+import asyncio
 
 is_private = False
 
@@ -56,9 +58,10 @@ async def send_message(message, user_message):
 
 async def send_message_mp(message, user_message, is_private):
     try:
+        messagetoedit = await message.author.send("loading...")
         response = await responses.handle_response(user_message)
-        await message.author.send(
-            response) if is_private else await message.channel.send(response)
+        await messagetoedit.edit(
+            content = response) if is_private else await messagetoedit.edit(content = response)
 
     except Exception as e:
         print(e)
@@ -123,10 +126,24 @@ def run_discord_bot():
 
     @client.tree.command(name="reset", description="Rendez Three amnesique")
     async def reset(interaction: discord.Interaction):
-        responses.chatbot.reset_chat()
+        #global Global_prompt
+        responses.Global_prompt = ""
+        #responses.chatbot.reset_chat()
         await interaction.response.defer(ephemeral=False)
         await interaction.followup.send("> **Info: Ah j'ai tout oublié.**")
         print("The CHAT BOT has been successfully reset")
+
+    @client.tree.command(name="googleit", description="return le premier page google sous forme d image")
+    async def googleit(interaction: discord.Interaction, *, message: str):
+        username = str(interaction.user)
+        user_message = message
+        channel = str(interaction.channel)
+        await interaction.response.defer(ephemeral=False)
+
+        image = await patchgpt.screenshot(user_message)
+        print(image)
+        #asyncio.sleep()
+        await interaction.followup.send("Voici l image " + image )
 
     @client.event
     async def on_message(message):
